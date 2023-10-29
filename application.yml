@@ -1,0 +1,5 @@
+ftp-server:
+  port: 201
+  idleSeconds: 501
+  activeLocalPort: 202
+  passivePorts: 30000-30005
