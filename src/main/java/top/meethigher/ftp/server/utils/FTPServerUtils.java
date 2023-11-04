@@ -1,11 +1,9 @@
-package top.meethigher.ftp.server;
-
+package top.meethigher.ftp.server.utils;
 
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authority;
-import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.listener.ListenerFactory;
@@ -17,30 +15,27 @@ import top.meethigher.ftp.server.bugfix.MemoryWritePermission;
 import top.meethigher.ftp.server.config.FTPServerProperties;
 import top.meethigher.ftp.server.utils.BaseProperties;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
 import static top.meethigher.ftp.server.utils.BasePropertiesUtils.load;
 
 /**
- * 服务启动器
- * 
+ * 将配置apache ftpserver的操作放到工具类
+ *
  * @author chenchuancheng
- * @since 2023/11/04 23:40
+ * @since 2023/11/04 23:44
  */
-public class ServerStarter {
+public class FTPServerUtils {
+
+    private static final String serverFile = "server.properties";
+
+    private static final String users = "users";
+
+    private static final String userFile = ".properties";
 
 
-    private final String serverFile = "server.properties";
-
-    private final String users = "users";
-
-    private final String userFile = ".properties";
-
-
-    public FTPServerProperties ftpServerProperties() {
+    public static FTPServerProperties ftpServerProperties() {
         FTPServerProperties p = new FTPServerProperties();
         try {
             BaseProperties properties = load(serverFile);
@@ -54,7 +49,7 @@ public class ServerStarter {
     }
 
 
-    public List<BaseUser> baseUserList() {
+    public static List<BaseUser> baseUserList() {
         List<BaseUser> list = new ArrayList<>();
         try {
             List<BaseProperties> pList = load(users, userFile);
@@ -77,7 +72,7 @@ public class ServerStarter {
     }
 
 
-    public Listener listener(FTPServerProperties p) {
+    public static Listener listener(FTPServerProperties p) {
         ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(p.getPort());
         DataConnectionConfigurationFactory configurationFactory = new DataConnectionConfigurationFactory();
@@ -88,7 +83,7 @@ public class ServerStarter {
         return listenerFactory.createListener();
     }
 
-    public UserManager userManager(List<BaseUser> list) {
+    public static UserManager userManager(List<BaseUser> list) {
         MemoryPropertiesUserManagerFactory propertiesUserManagerFactory = new MemoryPropertiesUserManagerFactory();
         UserManager um = propertiesUserManagerFactory.createUserManager();
         for (BaseUser baseUser : list) {
@@ -100,25 +95,11 @@ public class ServerStarter {
         return um;
     }
 
-    public FtpServer ftpServer(Listener listener,
-                               UserManager userManager) {
+    public static FtpServer ftpServer(Listener listener,
+                                      UserManager userManager) {
         FtpServerFactory serverFactory = new FtpServerFactory();
         serverFactory.addListener("default", listener);
         serverFactory.setUserManager(userManager);
         return serverFactory.createServer();
-    }
-
-
-    public void start() {
-        FTPServerProperties ftpServerProperties = ftpServerProperties();
-        List<BaseUser> baseUserList = baseUserList();
-        UserManager um = userManager(baseUserList);
-        Listener listener = listener(ftpServerProperties);
-        FtpServer ftpServer = ftpServer(listener, um);
-        try {
-            ftpServer.start();
-        } catch (FtpException e) {
-            e.printStackTrace();
-        }
     }
 }

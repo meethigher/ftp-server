@@ -12,7 +12,7 @@
     <!--文件归档-->
     <appender name="ARCHIVE"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/server.log</file>
+        <file>${LOG_HOME}/latest.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd,aux}/%d{yyyy-MM-dd-HH}.log
             </fileNamePattern>
