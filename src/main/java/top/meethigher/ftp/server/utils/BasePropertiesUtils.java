@@ -57,10 +57,8 @@ public class BasePropertiesUtils {
         InputStream is;
         if (file.exists()) {
             is = new FileInputStream(file);
-            log.info("加载外部配置文件 {}", resource);
         } else {
             is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-            log.debug("加载内置配置文件 {}", resource);
         }
         properties.load(is);
         return properties;
@@ -80,7 +78,7 @@ public class BasePropertiesUtils {
                     }
                 }
             } else {
-                log.error("{} 不是一个目录", dir.getAbsolutePath());
+                log.error("{} is not a directory", dir.getAbsolutePath());
             }
         } catch (Exception e
         ) {

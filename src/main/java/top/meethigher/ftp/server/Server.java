@@ -24,7 +24,24 @@ public class Server extends SimpleApplication {
         ftpServer.start();
     }
 
+    @Override
+    public String banner() throws Exception {
+        return "" +
+                "\n" +
+                "\n" +
+                "     //    / /                             //   / / /__  ___/ //   ) )\n" +
+                "    //___ / /  ___     // //  ___         //___       / /    //___/ /\n" +
+                "   / ___   / //___) ) // // //   ) )     / ___       / /    / ____ /\n" +
+                "  //    / / //       // // //   / /     //          / /    //\n" +
+                " //    / / ((____   // // ((___/ /     //          / /    //\n" +
+                " Have fun! Don't forget to bookmark https://github.com/meethigher/ftp-server\n" +
+                "\n" +
+                "\n";
+    }
+
     public static void main(String[] args) throws Exception {
         runApp(Server.class, args);
     }
+
+
 }

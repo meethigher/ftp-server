@@ -12,6 +12,7 @@ import org.apache.ftpserver.usermanager.impl.TransferRatePermission;
 import top.meethigher.ftp.server.bugfix.MemoryPropertiesUserManagerFactory;
 import top.meethigher.ftp.server.bugfix.MemoryWritePermission;
 import top.meethigher.ftp.server.config.FTPServerProperties;
+import top.meethigher.ftp.server.listener.AuditFtpServerFactory;
 import top.meethigher.ftp.server.listener.AuditListenerFactory;
 
 import java.util.ArrayList;
@@ -96,7 +97,8 @@ public class FTPServerUtils {
 
     public static FtpServer ftpServer(Listener listener,
                                       UserManager userManager) {
-        FtpServerFactory serverFactory = new FtpServerFactory();
+        AuditFtpServerFactory serverFactory = new AuditFtpServerFactory();
+        //请不要移除default
         serverFactory.addListener("default", listener);
         serverFactory.setUserManager(userManager);
         return serverFactory.createServer();
