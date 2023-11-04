@@ -1,7 +1,6 @@
 package top.meethigher.ftp.server.utils;
 
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ import java.util.*;
 public class BasePropertiesUtils {
 
 
-    public final static Logger log= LoggerFactory.getLogger(BasePropertiesUtils.class);
+    public final static Logger log = LoggerFactory.getLogger(BasePropertiesUtils.class);
 
 
     /**

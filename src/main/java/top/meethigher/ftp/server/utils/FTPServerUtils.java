@@ -6,14 +6,13 @@ import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.Listener;
-import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.ConcurrentLoginPermission;
 import org.apache.ftpserver.usermanager.impl.TransferRatePermission;
 import top.meethigher.ftp.server.bugfix.MemoryPropertiesUserManagerFactory;
 import top.meethigher.ftp.server.bugfix.MemoryWritePermission;
 import top.meethigher.ftp.server.config.FTPServerProperties;
-import top.meethigher.ftp.server.utils.BaseProperties;
+import top.meethigher.ftp.server.listener.AuditListenerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class FTPServerUtils {
 
 
     public static Listener listener(FTPServerProperties p) {
-        ListenerFactory listenerFactory = new ListenerFactory();
+        AuditListenerFactory listenerFactory = new AuditListenerFactory();
         listenerFactory.setPort(p.getPort());
         DataConnectionConfigurationFactory configurationFactory = new DataConnectionConfigurationFactory();
         configurationFactory.setIdleTime(p.getIdleSeconds());

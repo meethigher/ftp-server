@@ -12,7 +12,6 @@ import java.util.List;
 
 import static top.meethigher.ftp.server.utils.FTPServerUtils.*;
 
-
 public class Server extends SimpleApplication {
 
     @Override
@@ -26,7 +25,6 @@ public class Server extends SimpleApplication {
     }
 
     public static void main(String[] args) throws Exception {
-        System.setProperty("PID", "111");
         runApp(Server.class, args);
     }
 }

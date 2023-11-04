@@ -11,7 +11,7 @@ import org.apache.ftpserver.usermanager.impl.WriteRequest;
  * @author chenchuancheng
  * @since 2023/11/04 23:39
  */
-public class MemoryWritePermission  implements Authority {
+public class MemoryWritePermission implements Authority {
 
     private String permissionRoot;
 
@@ -26,8 +26,7 @@ public class MemoryWritePermission  implements Authority {
      * Construct a write permission for a file or directory relative to the user
      * home directory
      *
-     * @param permissionRoot
-     *            The file or directory
+     * @param permissionRoot The file or directory
      */
     public MemoryWritePermission(final String permissionRoot) {
         this.permissionRoot = permissionRoot;
