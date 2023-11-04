@@ -1,8 +1,14 @@
-package top.meethigher.ftp.server.ftpserver.utils;
+package top.meethigher.ftp.server.utils;
 
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -11,8 +17,11 @@ import java.util.*;
  * @author chenchuancheng
  * @since 2023/09/22 12:02
  */
-@Slf4j
-public class PropertiesUtils {
+
+public class BasePropertiesUtils {
+
+
+    public final static Logger log= LoggerFactory.getLogger(BasePropertiesUtils.class);
 
 
     /**
@@ -42,8 +51,8 @@ public class PropertiesUtils {
      * @param resource 配置文件
      * @return map
      */
-    public static Properties load(String resource) throws IOException {
-        Properties properties = new Properties();
+    public static BaseProperties load(String resource) throws IOException {
+        BaseProperties properties = new BaseProperties();
         //优先读取jar包同级配置文件，若不存在，则读取系统内置配置文件
         File file = new File(System.getProperty("user.dir").replace("\\", "/") + "/" + resource);
         InputStream is;
@@ -58,14 +67,14 @@ public class PropertiesUtils {
         return properties;
     }
 
-    public static List<Properties> load(String parent, String pattern) {
-        List<Properties> list = new ArrayList<>();
+    public static List<BaseProperties> load(String parent, String pattern) {
+        List<BaseProperties> list = new ArrayList<>();
         try {
             File dir = new File(System.getProperty("user.dir").replace("\\", "/") + "/" + parent);
             if (dir.isDirectory()) {
                 File[] files = dir.listFiles((dir1, name) -> name.endsWith(pattern));
                 for (File file : files) {
-                    Properties properties = new Properties();
+                    BaseProperties properties = new BaseProperties();
                     try (InputStream is = new FileInputStream(file)) {
                         properties.load(is);
                         list.add(properties);
@@ -79,7 +88,6 @@ public class PropertiesUtils {
             log.error(e.getMessage());
         }
         return list;
-
     }
 
 }

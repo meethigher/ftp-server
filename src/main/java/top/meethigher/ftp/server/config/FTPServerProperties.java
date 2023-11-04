@@ -1,7 +1,5 @@
-package top.meethigher.ftp.server.ftpserver.config;
+package top.meethigher.ftp.server.config;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * FTP服务配置
@@ -9,8 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author chenchuancheng
  * @since 2023/10/29 19:14
  */
-@Data
-@ConfigurationProperties(prefix = "ftp-server")
+
 public class FTPServerProperties {
 
 
@@ -43,4 +40,35 @@ public class FTPServerProperties {
     private String passivePorts = "30000-";
 
 
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getIdleSeconds() {
+        return idleSeconds;
+    }
+
+    public void setIdleSeconds(int idleSeconds) {
+        this.idleSeconds = idleSeconds;
+    }
+
+    public int getActiveLocalPort() {
+        return activeLocalPort;
+    }
+
+    public void setActiveLocalPort(int activeLocalPort) {
+        this.activeLocalPort = activeLocalPort;
+    }
+
+    public String getPassivePorts() {
+        return passivePorts;
+    }
+
+    public void setPassivePorts(String passivePorts) {
+        this.passivePorts = passivePorts;
+    }
 }
