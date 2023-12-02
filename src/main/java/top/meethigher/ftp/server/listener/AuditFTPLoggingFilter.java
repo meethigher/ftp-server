@@ -66,7 +66,7 @@ public class AuditFTPLoggingFilter extends LoggingFilter {
         if (user == null) {
             logger.info("received: {}", logMessage);
         } else {
-            logger.info("received from {}: {}", user, logMessage);
+            logger.info("received from {}[{}]: {}", user, session.getRemoteAddress().toString(), logMessage);
         }
         nextFilter.messageReceived(session, message);
     }
@@ -77,7 +77,7 @@ public class AuditFTPLoggingFilter extends LoggingFilter {
         if (user == null) {
             logger.info("sent: {}", writeRequest.getOriginalMessage());
         } else {
-            logger.info("sent to {}: {}", user, writeRequest.getOriginalMessage());
+            logger.info("sent to {}[{}]: {}", user, session.getRemoteAddress().toString(), writeRequest.getOriginalMessage());
         }
         nextFilter.messageSent(session, writeRequest);
     }
