@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -82,6 +83,38 @@ public class BasePropertiesUtils {
             }
         } catch (Exception e
         ) {
+            log.error(e.getMessage());
+        }
+        return list;
+    }
+
+    public static <T> List<T> load(String parent, String pattern, Class<T> clazz) {
+        List<T> list = new ArrayList<>();
+        try {
+            File dir = new File(System.getProperty("user.dir").replace("\\", "/") + "/" + parent);
+            if (dir.isDirectory()) {
+                File[] files = dir.listFiles((dir1, name) -> name.endsWith(pattern));
+                for (File file : files) {
+                    BaseProperties properties = new BaseProperties();
+                    try (InputStream is = new FileInputStream(file)) {
+                        properties.load(is);
+                        T t = clazz.getConstructor().newInstance();
+                        list.add(t);
+                        Enumeration<Object> keys = properties.keys();
+                        while (keys.hasMoreElements()) {
+                            String key = (String) keys.nextElement();
+                            Field field = clazz.getDeclaredField(key);
+                            field.setAccessible(true);
+                            field.set(t, properties.get(key, field.getType()));
+                        }
+
+                    }
+                }
+            } else {
+                log.error("{} is not a directory", dir.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
         }
         return list;

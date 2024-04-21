@@ -14,8 +14,8 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 /**
- * @see org.apache.ftpserver.util.BaseProperties
  * @author chenchuancheng
+ * @see org.apache.ftpserver.util.BaseProperties
  * @since 2023/11/04 23:39
  */
 public class BaseProperties extends Properties implements Serializable {
@@ -56,6 +56,36 @@ public class BaseProperties extends Properties implements Serializable {
             return bol;
         }
     }
+
+    public <T> T get(String key, Class<T> clazz) {
+        String value = null;
+        try {
+            value = getString(key);
+        } catch (FtpException e) {
+            return null;
+        }
+        if (value == null) {
+            return null;
+        }
+
+        if (clazz == String.class) {
+            return (T) value;
+        } else if (clazz == Integer.class || clazz == int.class) {
+            return (T) Integer.valueOf(value);
+        } else if (clazz == Long.class || clazz == long.class) {
+            return (T) Long.valueOf(value);
+        } else if (clazz == Boolean.class || clazz == boolean.class) {
+            return (T) Boolean.valueOf(value);
+        } else if (clazz == Double.class || clazz == double.class) {
+            return (T) Double.valueOf(value);
+        } else if (clazz == Float.class || clazz == float.class) {
+            return (T) Float.valueOf(value);
+        } else {
+            // Add more conversions for other types as needed
+            throw new IllegalArgumentException("Unsupported class type: " + clazz.getName());
+        }
+    }
+
 
     /**
      * Get integer value.

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP Server Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #ddd;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+            color: #fff;
+        }
+
+        h2 {
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+            color: #ddd;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #666;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #444;
+            color: #ddd;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .top-bar {
+            background-color: #111;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #ddd;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer a:hover {
+            color: #fff;
+        }
+        .glow {
+            text-shadow: 0px 0px 10px #ff0000;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-bar">
+        <h1 class="glow">FTPServer <span class="underline">AdminUI</span></h1>
+    </div>
+    <div th:if="${not #strings.isEmpty(msg)}">
+        <h2 th:text="${msg}" style="color: indianred"></h2>
+    </div>
+    <h2>Login</h2>
+    <form action="/login.html" method="post">
+        <input type="text" name="username" placeholder="Username" th:value="${username}" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+    </form>
+    <div class="footer">
+        <a href="https://github.com/meethigher/ftp-server">Github</a>
+        <span>|</span>
+        <a href="https://meethigher.top">Author</a>
+    </div>
+</div>
+</body>
+</html>

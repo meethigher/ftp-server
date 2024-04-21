@@ -39,6 +39,26 @@ public class FTPServerProperties {
      */
     private String passivePorts = "30000-";
 
+    /**
+     * web账户
+     */
+    private String webUsername = "admin";
+
+    /**
+     * web账户对应密码
+     */
+    private String webPassword = "admin";
+
+    /**
+     * web服务端口
+     */
+    private int webPort = 8080;
+
+    /**
+     * 启动web服务
+     */
+    private boolean webEnable = true;
+
 
     public int getPort() {
         return port;
@@ -70,5 +90,37 @@ public class FTPServerProperties {
 
     public void setPassivePorts(String passivePorts) {
         this.passivePorts = passivePorts;
+    }
+
+    public String getWebUsername() {
+        return webUsername;
+    }
+
+    public void setWebUsername(String webUsername) {
+        this.webUsername = webUsername;
+    }
+
+    public String getWebPassword() {
+        return webPassword;
+    }
+
+    public void setWebPassword(String webPassword) {
+        this.webPassword = webPassword;
+    }
+
+    public int getWebPort() {
+        return webPort;
+    }
+
+    public void setWebPort(int webPort) {
+        this.webPort = webPort;
+    }
+
+    public boolean isWebEnable() {
+        return webEnable;
+    }
+
+    public void setWebEnable(boolean webEnable) {
+        this.webEnable = webEnable;
     }
 }

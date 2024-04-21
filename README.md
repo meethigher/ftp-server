@@ -1,3 +1,5 @@
+![image-20240421225808979](README/image-20240421225808979.png)
+
 # Introduction
 
 ftp-server is an FTP service implemented in Java language based on [Apache FtpServer 1.2.0 Release — Apache MINA](https://mina.apache.org/ftpserver-project/download_1_2.html).
@@ -19,6 +21,10 @@ port=201
 idleSeconds=501
 activeLocalPort=202
 passivePorts=30000-30005
+web.enable=true
+web.port=8080
+web.username=admin
+web.password=admin
 ```
 
 you can perform user management and authorization in the users folder, the configuration file is suffixed with `.properties`

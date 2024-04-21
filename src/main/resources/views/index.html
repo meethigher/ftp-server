@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP Server</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #ddd;
+        }
+
+        .top-bar {
+            background-color: #111;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+
+        .user-actions button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .user-actions button:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: #ddd;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #555;
+        }
+
+        th {
+            background-color: #444;
+            color: #fff;
+        }
+
+        td {
+            background-color: #555;
+        }
+
+        .glow {
+            text-shadow: 0px 0px 10px #ff0000;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+
+        input[type="submit"], .modal-footer > .modal-button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover, .modal-footer > .modal-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-bar">
+        <h1 class="glow">FTP<span class="underline">Server</span></h1>
+        <h2>port=<span th:text="${port}"></span></h2>
+        <h2>idleSeconds=<span th:text="${idleSeconds}"></span></h2>
+        <h2>activeLocalPort=<span th:text="${activeLocalPort}"></span></h2>
+        <h2>passivePorts=<span th:text="${passivePorts}"></span></h2>
+        <h2>web.port=<span th:text="${webPort}"></span></h2>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>HomeDir</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody th:each="user:${users}">
+        <tr>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.homeDir}"></td>
+            <td th:text="${user.enabled?'√':'×'}"></td>
+            <td class="user-actions">
+                <button th:value="${user.name}" onclick="edit(event)">Edit</button>
+                <button th:value="${user.name}" onclick="deleteAction(event)">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="footer">
+        <a href="https://github.com/meethigher/ftp-server">Github</a>
+        <span>|</span>
+        <a href="https://meethigher.top">Author</a>
+    </div>
+</div>
+
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return "";
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    function deleteAction(e) {
+        window.location.href = "/deleteUser.html?name=" + e.target.value;
+    }
+
+    function edit(e) {
+        window.location.href = "/editUser.html?name=" + e.target.value;
+    }
+
+    // 获取URL中的msg参数值
+    var msgValue = getParameterByName("msg");
+
+    // 如果msg参数存在且有值，则弹出对应的消息
+    if (msgValue) {
+        alert(msgValue);
+    }
+
+
+    window.onclick = function (event) {
+        if (event.target == document.getElementById("myModal")) {
+            closeModal();
+        }
+    };
+</script>
+</body>
+</html>

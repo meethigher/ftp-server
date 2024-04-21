@@ -12,11 +12,20 @@ import org.apache.ftpserver.usermanager.impl.TransferRatePermission;
 import top.meethigher.ftp.server.bugfix.MemoryPropertiesUserManagerFactory;
 import top.meethigher.ftp.server.bugfix.MemoryWritePermission;
 import top.meethigher.ftp.server.config.FTPServerProperties;
+import top.meethigher.ftp.server.listener.AuditFtpServer;
 import top.meethigher.ftp.server.listener.AuditFtpServerFactory;
 import top.meethigher.ftp.server.listener.AuditListenerFactory;
 
+import javax.swing.text.html.Option;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static top.meethigher.ftp.server.utils.BasePropertiesUtils.load;
 
@@ -34,6 +43,59 @@ public class FTPServerUtils {
 
     private static final String userFile = ".properties";
 
+    public static boolean deleteByUsername(String username) {
+        boolean result = true;
+        try {
+            File dir = getDir();
+            if (dir.isDirectory()) {
+                File[] files = dir.listFiles(pathname -> (username + userFile).equals(pathname.getName()));
+                if (files != null) {
+                    for (File file : files) {
+                        if (!file.delete()) {
+                            result = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+    }
+
+    private static File getDir() {
+        return new File(System.getProperty("user.dir").replace("\\", "/") + "/" + users);
+    }
+
+    public static boolean updateUserFile(UserModel userModel) {
+        boolean result = true;
+        try {
+            File dir = getDir();
+            File file = new File(dir, userModel.getName() + userFile);
+            if (!file.exists() && !file.createNewFile()) {
+                result = false;
+            } else {
+                Properties p = new Properties();
+                p.setProperty("enabled", String.valueOf(userModel.isEnabled()));
+                p.setProperty("name", String.valueOf(userModel.getName()));
+                p.setProperty("password", String.valueOf(userModel.getPassword()));
+                p.setProperty("homeDir", String.valueOf(userModel.getHomeDir()));
+                p.setProperty("write", String.valueOf(userModel.getWrite()));
+                p.setProperty("maxConcurrentLogins", String.valueOf(userModel.getMaxConcurrentLogins()));
+                p.setProperty("maxConcurrentLoginsPerIP", String.valueOf(userModel.getMaxConcurrentLoginsPerIP()));
+                p.setProperty("maxDownloadRate", String.valueOf(userModel.getMaxDownloadRate()));
+                p.setProperty("maxUploadRate", String.valueOf(userModel.getMaxUploadRate()));
+                FileOutputStream fos = new FileOutputStream(file);
+                p.store(fos, userModel.getName() + userFile);
+                fos.close();
+            }
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
+    }
+
 
     public static FTPServerProperties ftpServerProperties() {
         FTPServerProperties p = new FTPServerProperties();
@@ -43,9 +105,30 @@ public class FTPServerUtils {
             p.setIdleSeconds(properties.getInteger("idleSeconds", p.getIdleSeconds()));
             p.setActiveLocalPort(properties.getInteger("activeLocalPort", p.getActiveLocalPort()));
             p.setPassivePorts(properties.getString("passivePorts", p.getPassivePorts()));
+            p.setWebPort(properties.getInteger("web.port", p.getWebPort()));
+            p.setWebUsername(properties.getString("web.username", p.getWebUsername()));
+            p.setWebPassword(properties.getString("web.password", p.getWebPassword()));
+            p.setWebEnable(properties.getBoolean("web.enable", p.isWebEnable()));
         } catch (Exception ignore) {
         }
         return p;
+    }
+
+    public static List<UserModel> userModels() {
+        return load(users, userFile, UserModel.class);
+    }
+
+    public static Optional<UserModel> findByName(String name) {
+        Optional<UserModel> optional = Optional.empty();
+        try {
+            List<UserModel> list = load(users, userFile, UserModel.class).stream().filter(userModel -> userModel.getName().equals(name)).collect(Collectors.toList());
+            if (!list.isEmpty()) {
+                optional = Optional.of(list.get(0));
+            }
+        } catch (Exception e) {
+
+        }
+        return optional;
     }
 
 
@@ -69,6 +152,20 @@ public class FTPServerUtils {
         } catch (Exception ignored) {
         }
         return list;
+    }
+
+    public static BaseUser createBaseUser(UserModel userModel) {
+        BaseUser user = new BaseUser();
+        user.setName(userModel.getName());
+        user.setPassword(userModel.getPassword());
+        user.setEnabled(userModel.isEnabled());
+        user.setHomeDirectory(userModel.getHomeDir());
+        ArrayList<Authority> authorities = new ArrayList<>();
+        authorities.add(new MemoryWritePermission(userModel.getWrite()));
+        authorities.add(new ConcurrentLoginPermission(userModel.getMaxConcurrentLogins(), userModel.getMaxConcurrentLoginsPerIP()));
+        authorities.add(new TransferRatePermission(userModel.getMaxDownloadRate(), userModel.getMaxUploadRate()));
+        user.setAuthorities(authorities);
+        return user;
     }
 
 
@@ -95,12 +192,12 @@ public class FTPServerUtils {
         return um;
     }
 
-    public static FtpServer ftpServer(Listener listener,
-                                      UserManager userManager) {
+    public static AuditFtpServer ftpServer(Listener listener,
+                                           UserManager userManager) {
         AuditFtpServerFactory serverFactory = new AuditFtpServerFactory();
         //请不要移除default
         serverFactory.addListener("default", listener);
         serverFactory.setUserManager(userManager);
-        return serverFactory.createServer();
+        return (AuditFtpServer) serverFactory.createServer();
     }
 }

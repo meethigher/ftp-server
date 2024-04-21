@@ -1,11 +1,12 @@
 package top.meethigher.ftp.server;
 
 
-import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import top.meethigher.ftp.server.config.FTPServerProperties;
+import top.meethigher.ftp.server.listener.AuditFtpServer;
+import top.meethigher.ftp.server.web.WebServer;
 import top.meethigher.simple.startup.log.SimpleApplication;
 
 import java.util.List;
@@ -20,8 +21,13 @@ public class Server extends SimpleApplication {
         List<BaseUser> baseUserList = baseUserList();
         UserManager um = userManager(baseUserList);
         Listener listener = listener(ftpServerProperties);
-        FtpServer ftpServer = ftpServer(listener, um);
+
+        AuditFtpServer ftpServer = ftpServer(listener, um);
         ftpServer.start();
+        if (ftpServerProperties.isWebEnable()) {
+            WebServer webServer = new WebServer(ftpServerProperties, ftpServer);
+            webServer.start();
+        }
     }
 
     @Override
@@ -34,7 +40,8 @@ public class Server extends SimpleApplication {
                 "   / ___   / //___) ) // // //   ) )     / ___       / /    / ____ /\n" +
                 "  //    / / //       // // //   / /     //          / /    //\n" +
                 " //    / / ((____   // // ((___/ /     //          / /    //\n" +
-                " Have fun! Don't forget to bookmark https://github.com/meethigher/ftp-server\n" +
+                "   Source code address is https://github.com/meethigher/ftp-server\n" +
+                "       Have fun! Author's website is https://meethigher.top \n" +
                 "\n" +
                 "\n";
     }
