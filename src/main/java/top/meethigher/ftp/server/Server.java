@@ -1,6 +1,7 @@
 package top.meethigher.ftp.server;
 
 
+import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
@@ -21,8 +22,8 @@ public class Server extends SimpleApplication {
         List<BaseUser> baseUserList = baseUserList();
         UserManager um = userManager(baseUserList);
         Listener listener = listener(ftpServerProperties);
-
-        AuditFtpServer ftpServer = ftpServer(listener, um);
+        ConnectionConfig connectionConfig = connectionConfig(ftpServerProperties);
+        AuditFtpServer ftpServer = ftpServer(listener, um, connectionConfig);
         ftpServer.start();
         if (ftpServerProperties.isWebEnable()) {
             WebServer webServer = new WebServer(ftpServerProperties, ftpServer);

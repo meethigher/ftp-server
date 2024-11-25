@@ -1,10 +1,13 @@
 package top.meethigher.ftp.server.utils;
 
+import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.impl.DefaultConnectionConfig;
+import org.apache.ftpserver.impl.DefaultDataConnectionConfiguration;
 import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.ConcurrentLoginPermission;
@@ -105,6 +108,12 @@ public class FTPServerUtils {
             p.setIdleSeconds(properties.getInteger("idleSeconds", p.getIdleSeconds()));
             p.setActiveLocalPort(properties.getInteger("activeLocalPort", p.getActiveLocalPort()));
             p.setPassivePorts(properties.getString("passivePorts", p.getPassivePorts()));
+            p.setAnonymousLoginEnabled(properties.getBoolean("anonymousLoginEnabled", p.isAnonymousLoginEnabled()));
+            p.setLoginFailureDelay(properties.getInteger("loginFailureDelay", p.getLoginFailureDelay()));
+            p.setMaxLogins(properties.getInteger("maxLogins", p.getMaxLogins()));
+            p.setMaxAnonymousLogins(properties.getInteger("maxAnonymousLogins", p.getMaxAnonymousLogins()));
+            p.setMaxLoginFailures(properties.getInteger("maxLoginFailures", p.getMaxLoginFailures()));
+            p.setMaxThreads(properties.getInteger("maxThreads", p.getMaxThreads()));
             p.setWebPort(properties.getInteger("web.port", p.getWebPort()));
             p.setWebUsername(properties.getString("web.username", p.getWebUsername()));
             p.setWebPassword(properties.getString("web.password", p.getWebPassword()));
@@ -180,6 +189,11 @@ public class FTPServerUtils {
         return listenerFactory.createListener();
     }
 
+    public static ConnectionConfig connectionConfig(FTPServerProperties p) {
+        return new DefaultConnectionConfig(p.isAnonymousLoginEnabled(), p.getLoginFailureDelay(),
+                p.getMaxLogins(), p.getMaxAnonymousLogins(), p.getMaxLoginFailures(), p.getMaxThreads());
+    }
+
     public static UserManager userManager(List<BaseUser> list) {
         MemoryPropertiesUserManagerFactory propertiesUserManagerFactory = new MemoryPropertiesUserManagerFactory();
         UserManager um = propertiesUserManagerFactory.createUserManager();
@@ -193,8 +207,10 @@ public class FTPServerUtils {
     }
 
     public static AuditFtpServer ftpServer(Listener listener,
-                                           UserManager userManager) {
+                                           UserManager userManager, ConnectionConfig connectionConfig) {
         AuditFtpServerFactory serverFactory = new AuditFtpServerFactory();
+        // 配置连接限制
+        serverFactory.setConnectionConfig(connectionConfig);
         //请不要移除default
         serverFactory.addListener("default", listener);
         serverFactory.setUserManager(userManager);

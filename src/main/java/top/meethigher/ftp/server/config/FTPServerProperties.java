@@ -59,6 +59,36 @@ public class FTPServerProperties {
      */
     private boolean webEnable = true;
 
+    /**
+     * 最大登录数
+     */
+    private int maxLogins = 10;
+
+    /**
+     * 启用匿名登录
+     */
+    private boolean anonymousLoginEnabled = true;
+
+    /**
+     * 最大匿名登录数
+     */
+    private int maxAnonymousLogins = 10;
+
+    /**
+     * 最大登录失败数
+     */
+    private int maxLoginFailures = 3;
+
+    /**
+     * 登录失败延迟
+     */
+    private int loginFailureDelay = 500;
+
+    /**
+     * 最大线程
+     */
+    private int maxThreads = 0;
+
 
     public int getPort() {
         return port;
@@ -122,5 +152,53 @@ public class FTPServerProperties {
 
     public void setWebEnable(boolean webEnable) {
         this.webEnable = webEnable;
+    }
+
+    public int getMaxLogins() {
+        return maxLogins;
+    }
+
+    public void setMaxLogins(int maxLogins) {
+        this.maxLogins = maxLogins;
+    }
+
+    public boolean isAnonymousLoginEnabled() {
+        return anonymousLoginEnabled;
+    }
+
+    public void setAnonymousLoginEnabled(boolean anonymousLoginEnabled) {
+        this.anonymousLoginEnabled = anonymousLoginEnabled;
+    }
+
+    public int getMaxAnonymousLogins() {
+        return maxAnonymousLogins;
+    }
+
+    public void setMaxAnonymousLogins(int maxAnonymousLogins) {
+        this.maxAnonymousLogins = maxAnonymousLogins;
+    }
+
+    public int getMaxLoginFailures() {
+        return maxLoginFailures;
+    }
+
+    public void setMaxLoginFailures(int maxLoginFailures) {
+        this.maxLoginFailures = maxLoginFailures;
+    }
+
+    public int getLoginFailureDelay() {
+        return loginFailureDelay;
+    }
+
+    public void setLoginFailureDelay(int loginFailureDelay) {
+        this.loginFailureDelay = loginFailureDelay;
+    }
+
+    public int getMaxThreads() {
+        return maxThreads;
+    }
+
+    public void setMaxThreads(int maxThreads) {
+        this.maxThreads = maxThreads;
     }
 }
